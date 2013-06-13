@@ -1,0 +1,12 @@
+% Script to support extract_correct.exe
+
+file_name = [cd '\input\extract_info.dat'];
+fid = fopen(file_name, 'w');
+fprintf(fid,'%i\n', max(rel_trials));
+
+for i = rel_trials 
+    print_cmd =['fprintf(fid,''%i\n'', length(rt_trial_' num2str(i) '));'];
+    eval(print_cmd)
+end
+
+fclose(fid);

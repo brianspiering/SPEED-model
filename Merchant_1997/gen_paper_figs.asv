@@ -1,0 +1,49 @@
+function [figind]=gen_paper_figs(figind);
+
+% Generate Figures for Paper
+% BJS 08/10/06
+
+% Setup up
+% clear;
+% clc;
+% close all;
+warning off;
+format short g
+figure('Position',  [565 243 712 481]);
+figind = figind +1;
+plotflag=[0 0 0 0 ];
+% Title
+title = uicontrol('Style', 'text', 'String', 'Generate Merchant Figures for Paper',...
+        'Position', [200 825 500 30]);
+set(title,'fontsize',18)
+
+% 
+fig3box = uicontrol('Style', 'checkbox', 'String', 'Low Speed Spike Trains',...
+    'Position', [100 500 200 50],'Callback', 'plotflag(1) = get(fig3box,''value'');');
+%
+fig4box = uicontrol('Style', 'checkbox', 'String', 'High Speed Spike Trains',...
+    'Position', [100 400 200 50],'Callback', 'plotflag(2) = get(fig4box,''value'');');
+% 
+fig10box =  uicontrol('Style', 'checkbox', 'String', 'Low Speed Spike Histograms',...
+    'Position', [100 200 200 50],'Callback', 'plotflag(3) = get(fig10box,''value'');');
+% 
+fig10box =  uicontrol('Style', 'checkbox', 'String', 'High Speed Spike Histograms',...
+    'Position', [100 100 200 50],'Callback', 'plotflag(4) = get(fig10box,''value'');');
+
+
+newfig = uicontrol('Style', 'pushbutton', 'String', 'Plot',...
+        'Position', [580 325 75 50], 'Callback',...
+        '[figind]=plot_paper_figs(figind,plotflag);'); 
+
+
+
+
+
+
+
+
+
+
+
+
+

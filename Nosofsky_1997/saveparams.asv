@@ -1,0 +1,38 @@
+function saveparams(newParams)
+
+global message
+format long
+
+% Create data file
+curdir = cd;
+outfile = [curdir '\Expert_Fortran\Input\NickyParams.dat']; % for PC
+fid = fopen([outfile],'w');
+
+% Write trial stimuli response1 response2 rt1 rt2 to a data file.
+for trial=1:length(newParams)
+    if trial == 1 
+        fprintf(fid,'%3i\n',newParams(trial,:)' );
+    elseif trial == 30 
+        fprintf(fid,'%3i\n',newParams(trial,:)' );
+    elseif trial == 31 
+        fprintf(fid,'%3i\n',newParams(trial,:)' );   
+    elseif trial == 33
+        fprintf(fid,'%7i\n',newParams(trial,:)' );   
+    else
+	    fprintf(fid,'%15.13f\n',newParams(trial,:)' );
+    end
+end
+
+% Close response data file.
+fclose(fid);
+
+% Update message
+set(message,'string','New parameters saved')
+
+% Update displayed params
+cmd = ['load ' cd '\Expert_Fortran\Input\NickyParams.dat;'];
+eval(cmd)
+for curparam = 1:length(NickyParams)
+	paraminput(curparam) = uicontrol('Style', 'text', 'String', num2str(NickyParams(curparam)), ...
+        'Position', [10 750-(curparam*21) 75 17]);
+end

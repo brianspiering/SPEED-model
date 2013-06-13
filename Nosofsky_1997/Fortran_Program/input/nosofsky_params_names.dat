@@ -1,0 +1,33 @@
+Number of trials
+Filter width (integer <= 25)
+Initial Seed for Random Numbers (0 = Random Seed)
+Dopamine Baseline
+Caudate Baseline
+Globus Palidus Baseline
+Thalamus Baseline
+Premotor Baseline
+Pot Multiplier
+Pot Threshold
+Response Threshold
+Three Factor Caudate Threshold
+Two Factor Premotor Threshold
+Lower Bound for Starting Visual to Caudate
+Range for Starting Visual to Caudate
+Caudate Noise Standard Deviation (Normal Dist)
+Premotor Noise Standard Deviation (Normal Dist)
+Caudate Decay
+Caudate Inhibition
+Caudate to GP
+GP Decay to Baseline
+GP to Thalamus
+Thalamus Decay to Baseline
+Thalamus to Pre-motor
+Pre-motor Decay
+Pre-motor Inhibition
+Three Factor Learning Strengthening
+Three Factor Learning Weakening
+Three Factor Learning Decay
+Functional Performance Decay
+Two Factor Learning Strengthening
+Two Factor Learning Weakening
+Response Pot Multiplier

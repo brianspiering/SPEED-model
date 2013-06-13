@@ -1,0 +1,248 @@
+%Interface  User friendly interface for finding Vicky's parameters
+% 
+% Nicky 
+% The offspring of Ned and Vicky (Visual Into Caudate)
+% Notes:
+% Many dependencies
+%  
+%  April 18 2005		Brian Spiering
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Setup up
+%clear;
+%clc;
+close all;
+warning off;
+format short g
+figind = 1;
+figure('Position',  [228 50 872 877]);
+modflag=[0 0 0 0 0 0];
+mapflag=[0 0 0 0 0 0 0];
+block =10;
+trial =1;
+curparamvalue=-1;
+
+global message
+
+% Title
+title = uicontrol('Style', 'text', 'String', 'Model Nosofsky Data',...
+        'Position', [300 825 275 30]);
+set(title,'fontsize',18)
+
+% Display Intial Parameters
+storedparmbox = uicontrol('Style', 'text', 'String', 'Stored Parameters',...
+                'Position', [1 770 90 17]);
+cmd = ['load ' cd '\Fortran_Program\input\nosofsky_params.dat;'];
+eval(cmd)
+newParams=nosofsky_params;
+for curparam = 1:length(newParams)
+	paraminput(curparam) = uicontrol('Style', 'text', 'String', num2str(newParams(curparam)), ...
+        'Position', [10 750-(curparam*21) 75 17]);
+end
+
+% New Parameters    
+newparmbox = uicontrol('Style', 'text', 'String', 'New Parameters',...
+                'Position', [95 770 90 17]); 
+
+% Output Labels
+cmd = ['load ' cd '\Fortran_Program\input\labels;'];
+eval(cmd)
+for curlabel = 1:length(labels)
+	currlabelbox = uicontrol('Style', 'text', 'String', labels(curlabel),...
+            'Position', [200 750-(curlabel*21) 290 17]);
+end
+    
+
+% Type of Plot
+% Plot learning Curve
+Curve = uicontrol('Style', 'checkbox', 'String', 'Learning Curve',...
+    'Position', [500 660 100 50],'Callback', 'modflag(1) = get(Curve,''value'');');
+% Plot scatter plot
+Scatter = uicontrol('Style', 'checkbox', 'String', 'Scatter Plot',...
+    'Position', [500 600 100 50],'Callback', 'modflag(2) = get(Scatter,''value'');');
+% Plot activation
+Activationbox = uicontrol('Style', 'checkbox', 'String', 'Activations',...
+    'Position', [610 600 100 50],'Callback', 'modflag(4) = get(Activationbox,''value'');');
+% Plot reaction time
+Reactiontimebox = uicontrol('Style', 'checkbox', 'String', 'Reaction Time',...
+    'Position', [610 660 100 50],'Callback', 'modflag(5) = get(Reactiontimebox,''value'');');
+% Plot synapse strength
+Counterbox = uicontrol('Style', 'checkbox', 'String', 'Contour',...
+    'Position', [500 540 100 50],'Callback', 'modflag(3) = get(Counterbox,''value'');');
+% Plot A strengths
+Abox = uicontrol('Style', 'checkbox', 'String', 'A Only',...
+    'Position', [500 480 100 50],'Callback', 'mapflag(3) = get(Abox,''value'');');
+% Plot B strengths
+Bbox = uicontrol('Style', 'checkbox', 'String', 'B Only',...
+    'Position', [610 480 100 50],'Callback', 'mapflag(4) = get(Bbox,''value'');');
+% Plot Diff between A and B synaptic strength
+Diffbox =  uicontrol('Style', 'checkbox', 'String', 'Difference',...
+    'Position', [720 480 100 50],'Callback', 'mapflag(5) = get(Diffbox,''value'');');
+% Plot Caudate contour maps
+caudatebox = uicontrol('Style', 'checkbox', 'String', 'Caudate Map',...
+    'Position', [500 400 100 50],'Callback', 'mapflag(1) = get(caudatebox,''value'');');
+% Plot Pre-motor contour maps
+motorbox = uicontrol('Style', 'checkbox', 'String', 'Pre-motor Map',...
+    'Position', [610 400 100 50],'Callback', 'mapflag(2) = get(motorbox,''value'');');
+% Plot DA levels
+dopaminebox = uicontrol('Style', 'checkbox', 'String', 'Dopamine level',...
+    'Position', [610 540 100 50],'Callback', 'mapflag(6) = get(dopaminebox,''value'');');
+% Randomize stim
+randstimbox = uicontrol('Style', 'pushbutton', 'String', 'Randomize Stim',...
+    'Position', [720 540 100 50],'Callback', 'randomize_stim');
+
+% Trial
+trialtitle = uicontrol('Style', 'text', 'String', 'Trial',...
+    'Position', [750 700 75 15]);
+trialinput = uicontrol('Style', 'edit',...
+    'Position', [750 650 75 50], 'Callback', 'trial=str2num(get(trialinput,''String''));');
+set(trialinput,'string',trial);
+
+% Create buttons
+savebtn = uicontrol('Style', 'pushbutton', 'String', 'Save',...
+    'Position', [500 325 75 50], 'Callback', 'saveparams(newParams)');
+newfig = uicontrol('Style', 'pushbutton', 'String', 'Plot',...
+        'Position', [580 325 75 50], 'Callback',...
+        '[figind]=plot_Control(figind,modflag,mapflag,trial);');   
+closelast = uicontrol('Style', 'pushbutton', 'String', 'Close Last',...
+        'Position', [500 250 75 50], 'Callback', '[figind]=closefig(0,figind,message);');
+closeall = uicontrol('Style', 'pushbutton', 'String', 'Close All',...
+        'Position', [580 250 75 50], 'Callback', '[figind]=closefig(1,figind,message);');
+
+% Execute Button
+executebtn_normalvic = uicontrol('Style', 'pushbutton', 'String', 'Run',...
+    'Position', [700 295 100 50], 'BackgroundColor',[1 0 0], 'Callback', 'execute(figind,1)');
+% Create Paper Graph
+modeldfitbtn = uicontrol('Style', 'pushbutton', 'String', 'Fit Power Function',...
+    'Position', [500 150 150 50], 'Callback', '[figind]=gen_paper_plot(figind);');
+    
+% Number of blocks
+numofblocksinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(1*21) 75 17], 'Callback', 'newParams(1)=str2num(get(numofblocksinput,''String''));');
+% Filtersize
+filtersizeinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(2*21) 75 17], 'Callback', 'newParams(2)=str2num(get(filtersizeinput,''String''));');
+
+% Random seed
+randomseedinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(3*21) 75 17], 'Callback', 'newParams(3)=str2num(get(randomseedinput,''String''));');
+
+% Dopamine Baseline
+dopbaseinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(4*21) 75 17], 'Callback', 'newParams(4)=str2num(get(dopbaseinput,''String''));');
+% Caudate Baseline
+caudbaseinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(5*21) 75 17], 'Callback', 'newParams(5)=str2num(get(caudbaseinput,''String''));');
+% GP Baseline
+gpbaseinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(6*21) 75 17], 'Callback', 'newParams(6)=str2num(get(gpbaseinput,''String''));');
+% Thalamus Baseline
+thalbaseinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(7*21) 75 17], 'Callback', 'newParams(7)=str2num(get(thalbaseinput,''String''));');
+% Premotor Baseline
+prebaseinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(8*21) 75 17], 'Callback', 'newParams(8)=str2num(get(prebaseinput,''String''));');
+
+% Pot multiplier
+potmultiinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(9*21) 75 17], 'Callback', 'newParams(9)=str2num(get(potmultiinput,''String''));');
+
+% Pot threshold term
+potthresinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(10*21) 75 17], 'Callback', 'newParams(10)=str2num(get(potthresinput,''String''));');
+
+% Response threshold
+responsethresinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(11*21) 75 17], 'Callback', 'newParams(11)=str2num(get(responsethresinput,''String''));');
+% 3 factor NMDA threshold
+fac3visthresinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(12*21) 75 17], 'Callback', 'newParams(12)=str2num(get(fac3visthresinput,''String''));');
+
+% 2 factor Premotor NMDA threshold
+fac2motorthresinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(13*21) 75 17], 'Callback', 'newParams(13)=str2num(get(fac2motorthresinput,''String''));');
+
+
+% Caudate starting value
+caudvalueinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(14*21) 75 17], 'Callback', 'newParams(14)=str2num(get(caudvalueinput,''String''));');
+
+% Caudate starting range
+caudrangeinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(15*21) 75 17], 'Callback', 'newParams(15)=str2num(get(caudrangeinput,''String''));');
+% STD of caud noise
+cnoisestdinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(16*21) 75 17], 'Callback', 'newParams(16)=str2num(get(cnoisestdinput,''String''));');
+% STD of pre noise
+prenoisestdinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(17*21) 75 17], 'Callback', 'newParams(17)=str2num(get(prenoisestdinput,''String''));');
+% Caudate decay
+cauddecayinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(18*21) 75 17], 'Callback', 'newParams(18)=str2num(get(cauddecayinput,''String''));');
+
+% Caudate inhibition
+caudinhinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(19*21) 75 17], 'Callback', 'newParams(19)=str2num(get(caudinhinput,''String''));');
+
+% Caudate to Globus Pallidus
+cadtogbinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(20*21) 75 17], 'Callback', 'newParams(20)=str2num(get(cadtogbinput,''String''));');
+% Globus Pallidus Decay
+gbdecayinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(21*21) 75 17], 'Callback', 'newParams(21)=str2num(get(gbdecayinput,''String''));');
+
+
+%  Globus Pallidus to Thalmus
+gbtothalinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(22*21) 75 17], 'Callback', 'newParams(22)=str2num(get(gbtothalinput,''String''));');
+
+% Thalmus Decay
+thaldecayinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(23*21) 75 17], 'Callback', 'newParams(23)=str2num(get(thaldecayinput,''String''));');
+
+%  Thalamus to motor
+thaltomotorinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(24*21) 75 17], 'Callback', 'newParams(24)=str2num(get(thaltomotorinput,''String''));');
+
+% Motor Decay
+motordecayinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(25*21) 75 17], 'Callback', 'newParams(25)=str2num(get(motordecayinput,''String''));');
+
+% Motor inhibition
+motorinhinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(26*21) 75 17], 'Callback', 'newParams(26)=str2num(get(motorinhinput,''String''));');
+
+% three factor strenghting parameter
+threeinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(27*21) 75 17], 'Callback', 'newParams(27)=str2num(get(threeinput,''String''));');
+
+%threee weakening parameter
+threeweakeninput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(28*21) 75 17], 'Callback', 'newParams(28)=str2num(get(threeweakeninput,''String''));');
+
+% 3 factor learning decay
+fact3decayinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(29*21) 75 17], 'Callback', 'newParams(29)=str2num(get(fact3decayinput,''String''));');
+
+% Functional performance decay
+functionaldecayinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(30*21) 75 17], 'Callback', 'newParams(30)=str2num(get(functionaldecayinput,''String''));');
+
+% 2 factor learning 
+fact2learninput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(31*21) 75 17], 'Callback', 'newParams(31)=str2num(get(fact2learninput,''String''));');
+
+% 2 factor decay
+fact2decayinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(32*21) 75 17], 'Callback', 'newParams(32)=str2num(get(fact2decayinput,''String''));');
+
+% response pot multiplier
+resppotinput = uicontrol('Style', 'edit',...
+    'Position', [100 750-(33*21) 75 17], 'Callback', 'newParams(33)=str2num(get(resppotinput,''String''));');
+
+
+
+% Message
+message = uicontrol('Style', 'text', 'String', 'Nothing to say .... Yet',...
+    'Position', [600 75 200 25]);    

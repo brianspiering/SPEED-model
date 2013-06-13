@@ -1,0 +1,6 @@
+function output = drop_extreme(input,mult)
+
+% Function to drop extreme values from an array.  
+
+ind = find((input <= max(input) - range(input)*mult)&(input >= min(input) + range(input)*mult));
+output=input(ind);

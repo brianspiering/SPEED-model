@@ -1,0 +1,49 @@
+Number of Trials																							
+Filter width (integer <= 25)																							
+Initial Seed (0 is random)																							
+Dopamine Baseline																							
+Caudate Baseline																							
+Globus Palidus Baseline																							
+Thalamus Baseline																							
+Premotor Baseline																							
+Pot Multiplier																							
+Pot Threshold																							
+Response Threshold																							
+Three Factor Caudate Threshold																							
+Two Factor Premotor Threshold																							
+Lower Bound for Starting Visual to Caudate																							
+Range for Starting Visual to Caudate																							
+Caudate Noise Standard Deviation (Normal Dist)																							
+Premotor Noise Standard Deviation (Normal Dist)																							
+Visual to Caudate																							
+Caudate Decay																							
+Caudate Inhibition																							
+Caudate to GP																							
+GP Decay to baseline																							
+GP to Thalamus																							
+Thalamus Decay to baseline																							
+Visual to Premotor																							
+Thalamus to Premotor																							
+Premotor Decay																							
+Pre-motor Inhibition																							
+Three factor learning strengthening																							
+Three factor learning weakening																							
+Three factor learning decay																							
+Three factor functional decay																							
+Two factor learning strengthening																							
+Two factor learning weakening																							
+Drug Start																							
+Drug End																							
+"Drug Multiplier (1 is no effect, 0 is complete)"																							
+Lesion Multiplier (1 is no effect)																							
+Response Pot Multiplier																							
+																							
+																							
+																							
+																							
+																							
+																							
+																							
+																							
+																							
+																							

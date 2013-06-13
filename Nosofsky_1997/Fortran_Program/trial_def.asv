@@ -1,0 +1,11 @@
+
+step = linspace(max(ratio_mean),min(ratio_mean),9);
+
+for i = 1:9
+    ind = find(ratio_mean >= step(i));
+    trial(i) = ind(length(ind));
+end
+
+fid = fopen('trial.dat','w');
+fprintf('%i\n',trial);
+fprintf('%f\n',step';

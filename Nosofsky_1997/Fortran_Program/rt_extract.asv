@@ -1,0 +1,19 @@
+% We create files rt_trials_*.dat and activity_trials_*.dat from the files
+% response*.dat and prop*.dat.  We use the program rt_extract.exe created
+% using fortran, and run a little loop in matlab to get around the fact
+% that the fortran executible can only create 100 trials at a time.
+
+top_ind = (max(rel_trials)-mod(max(rel_trials),100))/100
+
+for i = 1:top_ind;
+    disp(i)
+    rel_trials = ((i-1)*100 + 1):i*100;
+    file_name = [cd '\input\rel_trials.dat'];
+    fid=fopen(file_name,'w');
+    fprintf(fid,'%i\n',num_sims);       
+    for j = 1:100
+        fprintf(fid,'%i\n',rel_trials(j));
+    end
+    fclose(fid);
+    ! rt_extract
+end

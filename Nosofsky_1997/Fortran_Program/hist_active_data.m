@@ -1,0 +1,54 @@
+% Creates histograms of activity data 
+
+figure
+
+num_bins = 1000;
+
+num_down = 2;
+num_across = 3;
+
+trial = 50; [1 20 50 80 130 200 400 700 1000];
+
+def_cmd  = ['two_factor = activity_trial_' num2str(trial) '(:,2);'];
+eval(def_cmd)
+def_cmd  = ['three_factor = activity_trial_' num2str(trial) '(:,3);'];
+eval(def_cmd)
+def_cmd  = ['decay = activity_trial_' num2str(trial) '(:,4);'];
+eval(def_cmd)
+def_cmd  = ['noise = activity_trial_' num2str(trial) '(:,5);'];
+eval(def_cmd)
+def_cmd  = ['inhibition = activity_trial_' num2str(trial) '(:,6);'];
+eval(def_cmd)
+
+mult = 0.01;
+
+two_factor=drop_extreme(two_factor,mult);
+three_factor=drop_extreme(three_factor,mult);
+decay=drop_extreme(decay,mult);
+noise=drop_extreme(noise,mult);
+inhibition=drop_extreme(inhibition,mult);
+
+subplot(num_down,num_across,1)
+hist(two_factor,1000);
+ylabel('frequency')
+legend('Two Factor');
+
+subplot(num_down,num_across,2)
+hist(three_factor,1000);
+legend('Three Factor');
+ylabel('frequency')
+
+subplot(num_down,num_across,3)
+hist(decay,1000);
+legend('Decay');
+ylabel('frequency')
+
+subplot(num_down,num_across,4)
+hist(noise,1000);
+legend('Noise');
+ylabel('frequency')
+
+subplot(num_down,num_across,5)
+hist(inhibition,1000);
+legend('Inhibition');
+ylabel('frequency')
